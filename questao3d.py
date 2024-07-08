@@ -16,24 +16,6 @@ samples = np.random.gamma(shape=k, scale=theta, size=(num_samples, n))
 # Inicialização da contagem de ICs contendo o verdadeiro theta
 count_ic_contains_theta = 0
 # count_ic_contains_theta = []
-
-# # Calcular IC para cada sub-amostra
-# for i in range(num_samples):
-#     sample = samples[i]
-#     # print(sample)
-#     sample_mean = np.mean(sample)
-#     theta_hat = sample_mean / 2
-    
-#     # p ???
-#     se = theta / (np.sqrt(2) * n)
-#     # se = np.sqrt(p*(1-p)/n) # std error, desvio padraO
-#     # print(p*(1-p))
-#     lower_bound = theta_hat - z_value * se
-#     upper_bound = theta_hat + z_value * se
-
-#     # Verificar se o IC contém o verdadeiro p
-#     if lower_bound <= p <= upper_bound:
-#         count_ic_contains_theta += 1
         
 lower_bounds = []
 upper_bounds = []
@@ -46,7 +28,6 @@ for j in range(1, n+1):
     se = theta / (np.sqrt(2) * j)  # Erro padrão para o theta_hat ajustado para cada j
     #! erro padrao = desvio padrao / raiz de n
     
-    # Calcular os limites do IC para a última sub-amostra de cada j
     lower_bound = np.mean(theta_hats - z_value * se)
     upper_bound = np.mean(theta_hats + z_value * se)
     
@@ -55,7 +36,6 @@ for j in range(1, n+1):
     if lower_bound <= p <= upper_bound:
         count_ic_contains_theta += 1
 
-    # Armazenar os limites para cada j
     lower_bounds.append(lower_bound)
     upper_bounds.append(upper_bound)
     
@@ -66,7 +46,7 @@ percent_coverage = (count_ic_contains_theta / n) * 100
 print(f"O intervalo de confiança contém o parâmetro verdadeiro {percent_coverage}% das vezes.")
 
 # Plotar os resultados
-plt.figure(figsize=(10, 6))
+fig = plt.figure(figsize=(10, 6))
 plt.plot(range(1, n + 1), lower_bounds, label='Lower Bound do IC', color='green')
 plt.plot(range(1, n + 1), upper_bounds, label='Upper Bound do IC', color='green')
 plt.axhline(theta, color='red', linestyle='--', label='Valor Verdadeiro de Theta')
@@ -77,13 +57,14 @@ plt.title('Limites de Intervalo de Confiança e Valor Verdadeiro de Theta')
 plt.legend()
 plt.grid(True)
 plt.show()
+fig.savefig('figures/intervalo_confianca.png', dpi=300)
 
 # Conforme o número de observações aumenta, o intervalo vai ficando menor, ou seja, mais confiante.
 
 #! - d)
 
 # Dados do experimento
-alfa = 0.05
+alfa = 0.04
 p_0 = 1 - alfa # Valor de alfa - Nível de significancia
 p_hat = percent_coverage / 100
 print("p_hat: ", p_hat)
@@ -97,8 +78,8 @@ z = (p_hat - p_0) / se
 z_critical = norm.ppf(1 - alfa/2)  # aproximadamente 1.96
 print(norm.ppf(0.95) )
 
-#H0: a proporção de intervalos de confiança que contêm o verdadeiro valor de theta é igual da prevista 95% (nivel de confiança)
-#H1: a proporção de intervalos de confiança que contêm o verdadeiro valor de theta é diferente da prevista 95% (nivel de confiança)
+#H0: a proporção de intervalos de confiança que contém o valor de theta é igual da prevista 95% (nivel de confiança)
+#H1: a proporção de intervalos de confiança que contém o valor de theta é diferente da prevista 95% (nivel de confiança)
 
 # Decisão
 print(f"\nValor de Z: {z}")

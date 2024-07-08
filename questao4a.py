@@ -34,7 +34,6 @@ F_val = max(var1, var2) / min(var2, var1)
 deg_freedom1 = n1 - 1
 deg_freedom2 = n2 - 1
 
-# F_critical_l = fisher.ppf(1-alpha/2, deg_freedom1, deg_freedom2)
 F_critical_lower = fisher.ppf(alpha/2, deg_freedom1, deg_freedom2)
 F_critical_upper = fisher.ppf(1-alpha/2, deg_freedom1, deg_freedom2)
 
@@ -70,3 +69,4 @@ plt.ylabel('Densidade de probabilidade')
 plt.legend()
 plt.grid(True)
 plt.show()
+fig.savefig('figures/distribuicao_f.png', dpi=300)
